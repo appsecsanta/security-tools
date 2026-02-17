@@ -1,0 +1,13 @@
+{
+  "name": "@appsecsanta/subdomain-finder",
+  "version": "1.0.0",
+  "description": "Subdomain Finder — Discover subdomains via crt.sh, HackerTarget & Anubis",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev",
+    "deploy": "wrangler pages deploy demo"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}

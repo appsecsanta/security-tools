@@ -1,0 +1,13 @@
+{
+  "name": "@appsecsanta/dns-checker",
+  "version": "1.0.0",
+  "description": "DNS Security Checker — 8 DNS security tests with A+ to F grading",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev",
+    "deploy": "wrangler pages deploy demo"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}

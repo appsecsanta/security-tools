@@ -1,0 +1,13 @@
+{
+  "name": "@appsecsanta/ssl-checker",
+  "version": "1.0.0",
+  "description": "SSL/TLS Checker — 8 SSL security tests with A+ to F grading",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev",
+    "deploy": "wrangler pages deploy demo"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}

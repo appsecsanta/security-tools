@@ -1,0 +1,13 @@
+{
+  "name": "@appsecsanta/headers-checker",
+  "version": "1.0.0",
+  "description": "Security Headers Checker — 11 security tests with A+ to F grading based on Mozilla Observatory v5",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev",
+    "deploy": "wrangler pages deploy demo"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}
