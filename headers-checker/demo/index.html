@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security Headers Checker — AppSec Santa</title>
+<meta name="description" content="Free security headers checker. Analyze any website's HTTP security headers and get an instant A+ to F grade based on Mozilla Observatory v5 scoring.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'brand-red': '#c41926',
+        'brand-red-hover': '#a8141f',
+        'brand-dark': '#1d2b35',
+        'surface-light': '#f8f9fe',
+        'text-primary': '#1f2124',
+        'text-secondary': '#646568',
+        'text-muted': '#9ca0a4',
+        'border': '#e0e1e9',
+      }
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Security Headers Checker",
+  "url": "https://appsecsanta.com/tools/security-headers-checker",
+  "description": "Free security headers checker with Observatory v5 scoring",
+  "applicationCategory": "SecurityApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Organization", "name": "AppSec Santa", "url": "https://appsecsanta.com" },
+  "codeRepository": "https://github.com/appsecsanta/security-tools"
+}
+</script>
+<style>
+  .sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body class="bg-white text-text-primary" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+
+<!-- Mini Header -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-border">
+  <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
+    <a href="https://appsecsanta.com" class="flex items-center gap-2 text-text-primary font-bold text-lg no-underline">
+      <span style="background:#c41926;color:#fff;padding:2px 8px;border-radius:4px;font-size:14px;font-weight:700">AS</span>
+      AppSec Santa
+    </a>
+    <div class="flex items-center gap-4">
+      <a href="https://appsecsanta.com/tools/security-headers-checker" class="text-sm text-text-muted hover:text-brand-red no-underline">Live Version</a>
+      <a href="https://github.com/appsecsanta/security-tools" class="flex items-center gap-1.5 text-sm text-text-muted hover:text-text-primary no-underline">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Spacer -->
+<div class="h-16"></div>
+
+<!-- Hero + Form -->
+<style>
+  #hero-section h1 { font-size: 56px; }
+  #scan-btn:hover { background: #a8141f !important; }
+  #scan-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  @media (max-width: 640px) {
+    #hero-section h1 { font-size: 32px !important; }
+    #hero-section h1 span { font-size: 22px !important; display: block; margin: 0 auto 12px; width: fit-content; }
+    #hero-section p { font-size: 16px !important; }
+    #hero-section form > div { border: none !important; border-radius: 0 !important; padding: 0 !important; }
+    #hero-section form > div > div { flex-direction: column !important; border: none !important; border-radius: 0 !important; }
+    #hero-section form input { border: 1px solid #ccd3e8 !important; border-radius: 6px !important; margin-bottom: 12px; }
+    #hero-section form button { border-radius: 6px !important; padding: 14px !important; }
+  }
+</style>
+<section id="hero-section" style="padding:80px 0 60px">
+  <div style="max-width:700px;margin:0 auto;padding:0 20px;text-align:center">
+    <h1 style="font-size:56px;font-weight:800;line-height:1.2;color:#191b23;margin:0 0 20px">
+      <span style="background:#c41926;color:#fff;padding:2px 14px;border-radius:6px;font-size:32px;vertical-align:middle;margin-right:8px">Free</span>Security Headers Checker
+    </h1>
+    <p style="font-size:20px;font-weight:500;line-height:1.5;color:#191b23;margin:0 0 40px">
+      Analyze any website's HTTP security headers and get an instant grade from A+ to F — based on OWASP recommendations.
+    </p>
+    <div id="scan-form-wrapper">
+      <form id="scan-form" style="max-width:600px;margin:0 auto">
+        <div style="border:1px solid #ccd3e8;border-radius:12px;padding:8px">
+          <div style="display:flex;border:1px solid #ccd3e8;border-radius:6px;overflow:hidden">
+            <label for="url-input" class="sr-only">Website URL</label>
+            <input type="text" id="url-input" name="url" placeholder="Your website URL" autocomplete="url" autofocus required style="flex:1;padding:17px 20px;font-size:16px;border:none;outline:none;color:#191b23;background:#fff">
+            <button type="submit" id="scan-btn" style="padding:14px 28px;font-size:18px;font-weight:600;background:#c41926;color:#fff;border:none;cursor:pointer;white-space:nowrap">Check Headers</button>
+          </div>
+        </div>
+        <p id="form-error" class="mt-3 text-sm text-red-600 hidden"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Feature sections -->
+<div id="features-section">
+<style>
+  .feature-section { padding: 60px 0; }
+  .feature-section:nth-child(even) { background: #f8f9fc; }
+  .feature-row { display: flex; gap: 60px; align-items: center; max-width: 1060px; margin: 0 auto; padding: 0 20px; }
+  .feature-row.reverse { flex-direction: row-reverse; }
+  .feature-text { flex: 1; }
+  .feature-text h2 { font-size: 32px; font-weight: 800; line-height: 1.25; color: #191b23; margin: 0 0 14px; }
+  .feature-text > p { font-size: 17px; line-height: 1.6; color: #4a4d5a; margin: 0 0 24px; }
+  .check-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .check-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 16px; color: #191b23; line-height: 1.5; }
+  .check-list li svg { flex-shrink: 0; margin-top: 3px; }
+  @media (max-width: 768px) {
+    .feature-row, .feature-row.reverse { flex-direction: column; gap: 32px; }
+    .feature-text h2 { font-size: 24px; }
+    .feature-text > p { font-size: 15px; }
+  }
+</style>
+
+<section class="feature-section">
+  <div class="feature-row">
+    <div class="feature-text">
+      <h2>Instantly Score Your Security Headers</h2>
+      <p>Drop in a URL. Get a real-time security headers report — no setup, no signup, no waiting.</p>
+      <ul class="check-list">
+        <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#DEF7EC"/><path d="M6 10.5L8.5 13L14 7.5" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Instant A+ to F grade</li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#DEF7EC"/><path d="M6 10.5L8.5 13L14 7.5" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Missing headers identified</li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#DEF7EC"/><path d="M6 10.5L8.5 13L14 7.5" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Exact score penalties per header</li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#DEF7EC"/><path d="M6 10.5L8.5 13L14 7.5" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Works on any public website</li>
+      </ul>
+    </div>
+    <div class="feature-text" style="background:#f8f9fc;border-radius:16px;padding:32px;border:1px solid #e0e1e9">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:36px;height:36px;border-radius:8px;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#166534">CSP</span><div><div style="font-weight:700;color:#191b23;font-size:15px">Content-Security-Policy</div><div style="color:#6b7280;font-size:13px">XSS prevention via resource allowlisting</div></div></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:36px;height:36px;border-radius:8px;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#1e40af">STS</span><div><div style="font-weight:700;color:#191b23;font-size:15px">Strict-Transport-Security</div><div style="color:#6b7280;font-size:13px">Enforce HTTPS connections</div></div></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:36px;height:36px;border-radius:8px;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#92400e">XFO</span><div><div style="font-weight:700;color:#191b23;font-size:15px">X-Frame-Options</div><div style="color:#6b7280;font-size:13px">Clickjacking protection</div></div></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:36px;height:36px;border-radius:8px;background:#fce7f3;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#9d174d">SRI</span><div><div style="font-weight:700;color:#191b23;font-size:15px">Subresource Integrity</div><div style="color:#6b7280;font-size:13px">Third-party script verification</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="feature-section">
+  <div class="feature-row reverse">
+    <div class="feature-text">
+      <h2>11 Security Tests Based on OWASP</h2>
+      <p>Every scan runs 11 security checks following the Mozilla Observatory algorithm v5.</p>
+      <ul class="check-list">
+        <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#DEF7EC"/><path d="M6 10.5L8.5 13L14 7.5" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Content-Security-Policy (CSP) analysis</li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#DEF7EC"/><path d="M6 10.5L8.5 13L14 7.5" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>HSTS and HTTPS redirect checks</li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#DEF7EC"/><path d="M6 10.5L8.5 13L14 7.5" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>CORS misconfiguration detection</li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#DEF7EC"/><path d="M6 10.5L8.5 13L14 7.5" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>SRI and cookie security analysis</li>
+      </ul>
+    </div>
+    <div class="feature-text" style="background:#f8f9fc;border-radius:16px;padding:32px;border:1px solid #e0e1e9">
+      <div style="font-size:13px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:16px">Example Scores</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#fff;border-radius:8px;border:1px solid #e0e1e9"><span style="font-weight:600;color:#191b23;font-size:14px">Content-Security-Policy</span><span style="background:#dcfce7;color:#166534;font-size:12px;font-weight:600;padding:3px 10px;border-radius:12px">+10</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#fff;border-radius:8px;border:1px solid #e0e1e9"><span style="font-weight:600;color:#191b23;font-size:14px">Strict-Transport-Security</span><span style="background:#dcfce7;color:#166534;font-size:12px;font-weight:600;padding:3px 10px;border-radius:12px">+5</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#fff;border-radius:8px;border:1px solid #e0e1e9"><span style="font-weight:600;color:#191b23;font-size:14px">X-Frame-Options</span><span style="background:#fef2f2;color:#991b1b;font-size:12px;font-weight:600;padding:3px 10px;border-radius:12px">-20</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#fff;border-radius:8px;border:1px solid #e0e1e9"><span style="font-weight:600;color:#191b23;font-size:14px">CORS</span><span style="background:#dcfce7;color:#166534;font-size:12px;font-weight:600;padding:3px 10px;border-radius:12px">0</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- Results Section (identical structure to the live site, just with static Tailwind classes instead of Hugo partials) -->
+<section id="results-section" class="hidden py-12 lg:py-16">
+  <div class="max-w-5xl mx-auto px-5">
+    <!-- Grade Card -->
+    <div id="grade-card" class="bg-white rounded-2xl border border-border shadow-lg p-6 sm:p-8 mb-8">
+      <h2 class="text-text-muted text-sm font-semibold uppercase tracking-wider mb-5 flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        Scan summary: <span id="scanned-host" class="text-text-primary">—</span>
+      </h2>
+      <div class="flex flex-col sm:flex-row items-center gap-6">
+        <div id="grade-circle" class="w-20 h-20 rounded-xl flex items-center justify-center border-4 shrink-0">
+          <span id="grade-letter" class="text-3xl font-extrabold"></span>
+        </div>
+        <div class="flex-1 text-center sm:text-left min-w-0">
+          <div class="space-y-1">
+            <div class="text-text-primary"><span class="font-semibold text-text-muted">Score:</span> <span class="font-bold" id="score-value">0</span><span class="text-text-muted"> / 100</span><span id="score-trend" class="text-sm ml-1"></span></div>
+            <div class="text-text-primary"><span class="font-semibold text-text-muted">Scan Time:</span> <span id="scan-time">—</span></div>
+            <div class="text-text-primary"><span class="font-semibold text-text-muted">Tests Passed:</span> <span id="pass-count">0</span> / <span id="total-count">0</span></div>
+          </div>
+          <div id="scanned-url" class="text-xs text-text-muted/50 mt-2 break-all truncate" style="font-family: ui-monospace, monospace;"></div>
+          <div id="bonus-note" class="text-xs text-orange-500 mt-1 hidden"></div>
+        </div>
+        <div class="flex flex-col items-center gap-3 shrink-0">
+          <button id="rescan-btn" class="px-6 py-2 border border-border hover:border-brand-red hover:bg-brand-red hover:text-white text-text-primary text-sm font-semibold rounded-lg transition-colors whitespace-nowrap">Rescan</button>
+          <button id="scan-again-btn" class="text-sm text-text-muted hover:text-brand-red underline underline-offset-2 font-medium whitespace-nowrap">Scan another website</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="mb-6">
+      <nav id="result-tabs" class="flex gap-1 border-b border-border overflow-x-auto">
+        <button data-tab="scoring" class="result-tab px-4 py-2.5 text-sm font-semibold border-b-2 border-brand-red text-brand-red transition-colors whitespace-nowrap">Scoring</button>
+        <button data-tab="raw-headers" class="result-tab px-4 py-2.5 text-sm font-medium text-text-muted hover:text-text-primary border-b-2 border-transparent hover:border-border transition-colors whitespace-nowrap">Raw Server Headers</button>
+        <button data-tab="info" class="result-tab px-4 py-2.5 text-sm font-medium text-text-muted hover:text-text-primary border-b-2 border-transparent hover:border-border transition-colors whitespace-nowrap">Additional Info</button>
+        <button data-tab="definitions" class="result-tab px-4 py-2.5 text-sm font-medium text-text-muted hover:text-text-primary border-b-2 border-transparent hover:border-border transition-colors whitespace-nowrap">Methodology</button>
+        <button data-tab="faq" class="result-tab px-4 py-2.5 text-sm font-medium text-text-muted hover:text-text-primary border-b-2 border-transparent hover:border-border transition-colors whitespace-nowrap">FAQ</button>
+      </nav>
+    </div>
+
+    <!-- Tab: Scoring -->
+    <div id="tab-scoring" class="tab-panel">
+      <div class="overflow-x-auto mb-8">
+        <table class="w-full text-sm border border-border rounded-xl overflow-hidden">
+          <thead>
+            <tr class="bg-surface-light border-b border-border">
+              <th class="text-left py-3 px-4 text-xs uppercase tracking-wider text-text-muted font-semibold">Test</th>
+              <th class="text-center py-3 px-4 text-xs uppercase tracking-wider text-text-muted font-semibold w-20">Score</th>
+              <th class="text-left py-3 px-4 text-xs uppercase tracking-wider text-text-muted font-semibold">Reason</th>
+              <th class="text-left py-3 px-4 text-xs uppercase tracking-wider text-text-muted font-semibold hidden lg:table-cell">Recommendation</th>
+            </tr>
+          </thead>
+          <tbody id="results-tbody"></tbody>
+          <tfoot id="results-tfoot" class="hidden">
+            <tr class="border-t border-border">
+              <td colspan="4" class="py-2 px-4 text-xs text-text-muted">* Bonus not applied — base score must be 90+ for extra credit.</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab: Raw Headers -->
+    <div id="tab-raw-headers" class="tab-panel hidden">
+      <div class="bg-brand-dark rounded-xl overflow-hidden mb-8">
+        <div class="px-4 py-3 border-b border-white/10 flex items-center justify-between">
+          <span class="text-xs font-semibold text-white/50 uppercase tracking-wider">Response Headers</span>
+          <button id="copy-headers-btn" class="text-xs text-white/40 hover:text-white transition-colors font-medium">Copy</button>
+        </div>
+        <pre id="raw-headers-pre" class="px-4 py-4 text-sm text-green-400 overflow-x-auto" style="font-family: ui-monospace, 'SF Mono', 'Consolas', monospace; line-height: 1.6; margin: 0;"></pre>
+      </div>
+    </div>
+
+    <!-- Tab: Additional Info -->
+    <div id="tab-info" class="tab-panel hidden">
+      <div id="info-section">
+        <div id="info-list" class="border border-border rounded-xl overflow-hidden divide-y divide-border mb-8"></div>
+      </div>
+      <div id="info-empty" class="hidden text-center py-12 text-text-muted">No additional information available for this scan.</div>
+    </div>
+
+    <!-- Tab: Methodology -->
+    <div id="tab-definitions" class="tab-panel hidden">
+      <div class="mb-8">
+        <h3 class="text-2xl font-bold text-text-primary mb-3">What Are HTTP Security Headers?</h3>
+        <p class="text-text-secondary mb-8">HTTP security headers are directives sent by a web server that tell browsers how to behave when handling a site's content. They form a critical defense layer against cross-site scripting (XSS), clickjacking, protocol downgrade attacks, and data injection.</p>
+        <div class="grid md:grid-cols-2 gap-5">
+          <div class="bg-surface-light rounded-xl border border-border p-5"><div class="flex items-center gap-3 mb-3"><span class="w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center text-xs font-bold">CSP</span><h4 class="font-bold text-text-primary">Content-Security-Policy</h4><span class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-medium">+10 to -25</span></div><p class="text-sm text-text-secondary">The single most effective header against XSS. It specifies which sources the browser should accept for scripts, styles, images, and other resources.</p></div>
+          <div class="bg-surface-light rounded-xl border border-border p-5"><div class="flex items-center gap-3 mb-3"><span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold">HSTS</span><h4 class="font-bold text-text-primary">Strict-Transport-Security</h4><span class="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-medium">+5 to -20</span></div><p class="text-sm text-text-secondary">Forces browsers to use HTTPS for all future requests. Prevents SSL-stripping attacks.</p></div>
+          <div class="bg-surface-light rounded-xl border border-border p-5"><div class="flex items-center gap-3 mb-3"><span class="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-xs font-bold">XFO</span><h4 class="font-bold text-text-primary">X-Frame-Options</h4><span class="text-xs bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full font-medium">0 to -20</span></div><p class="text-sm text-text-secondary">Prevents pages from being loaded in iframes. Primary defense against clickjacking.</p></div>
+          <div class="bg-surface-light rounded-xl border border-border p-5"><div class="flex items-center gap-3 mb-3"><span class="w-8 h-8 rounded-lg bg-green-100 text-green-600 flex items-center justify-center text-xs font-bold">RP</span><h4 class="font-bold text-text-primary">Referrer-Policy</h4><span class="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full font-medium">+5 to 0</span></div><p class="text-sm text-text-secondary">Controls how much referrer information is included with requests.</p></div>
+          <div class="bg-surface-light rounded-xl border border-border p-5"><div class="flex items-center gap-3 mb-3"><span class="w-8 h-8 rounded-lg bg-yellow-100 text-yellow-600 flex items-center justify-center text-xs font-bold">XCTO</span><h4 class="font-bold text-text-primary">X-Content-Type-Options</h4><span class="text-xs bg-yellow-100 text-yellow-600 px-2 py-0.5 rounded-full font-medium">0 to -5</span></div><p class="text-sm text-text-secondary">Prevents browsers from MIME-sniffing a response away from the declared Content-Type.</p></div>
+          <div class="bg-surface-light rounded-xl border border-border p-5"><div class="flex items-center gap-3 mb-3"><span class="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center text-xs font-bold">CORS</span><h4 class="font-bold text-text-primary">Cross-Origin Resource Sharing</h4><span class="text-xs bg-rose-100 text-rose-600 px-2 py-0.5 rounded-full font-medium">0 to -50</span></div><p class="text-sm text-text-secondary">Controls which external origins can access your site's resources.</p></div>
+          <div class="bg-surface-light rounded-xl border border-border p-5"><div class="flex items-center gap-3 mb-3"><span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center text-xs font-bold">RED</span><h4 class="font-bold text-text-primary">Redirection (HTTP to HTTPS)</h4><span class="text-xs bg-sky-100 text-sky-600 px-2 py-0.5 rounded-full font-medium">0 to -20</span></div><p class="text-sm text-text-secondary">Tests whether HTTP requests are properly redirected to HTTPS.</p></div>
+          <div class="bg-surface-light rounded-xl border border-border p-5"><div class="flex items-center gap-3 mb-3"><span class="w-8 h-8 rounded-lg bg-teal-100 text-teal-600 flex items-center justify-center text-xs font-bold">SRI</span><h4 class="font-bold text-text-primary">Subresource Integrity</h4><span class="text-xs bg-teal-100 text-teal-600 px-2 py-0.5 rounded-full font-medium">+5 to -50</span></div><p class="text-sm text-text-secondary">Ensures third-party scripts and stylesheets haven't been tampered with.</p></div>
+        </div>
+
+        <div class="mt-8 bg-surface-light rounded-xl border border-border p-6">
+          <h4 class="text-lg font-bold text-text-primary mb-4">Scoring Methodology</h4>
+          <p class="text-sm text-text-secondary mb-4">Scoring follows the Mozilla Observatory algorithm v5. The base score starts at 100 and is adjusted by penalties and bonuses across 11 security tests. Extra credit only counts if your base score is 90 or above.</p>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead><tr class="border-b border-border"><th class="text-left py-2 pr-4 font-semibold text-text-primary">Score</th><th class="text-left py-2 pr-4 font-semibold text-text-primary">Grade</th><th class="text-left py-2 font-semibold text-text-primary">Meaning</th></tr></thead>
+              <tbody class="text-text-secondary">
+                <tr class="border-b border-border/50"><td class="py-2 pr-4">100+</td><td class="py-2 pr-4 font-bold text-green-600">A+</td><td class="py-2">Outstanding — all tests pass with extra credit</td></tr>
+                <tr class="border-b border-border/50"><td class="py-2 pr-4">90–99</td><td class="py-2 pr-4 font-bold text-green-600">A</td><td class="py-2">Excellent — near-perfect security headers</td></tr>
+                <tr class="border-b border-border/50"><td class="py-2 pr-4">80–89</td><td class="py-2 pr-4 font-bold text-green-500">B+/B</td><td class="py-2">Good — most headers present</td></tr>
+                <tr class="border-b border-border/50"><td class="py-2 pr-4">60–79</td><td class="py-2 pr-4 font-bold text-yellow-600">B-/C+</td><td class="py-2">Fair — several improvements needed</td></tr>
+                <tr class="border-b border-border/50"><td class="py-2 pr-4">40–59</td><td class="py-2 pr-4 font-bold text-orange-500">C/D+</td><td class="py-2">Weak — many headers missing</td></tr>
+                <tr><td class="py-2 pr-4">0–39</td><td class="py-2 pr-4 font-bold text-red-600">D/F</td><td class="py-2">Critical — virtually no security headers</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: FAQ -->
+    <div id="tab-faq" class="tab-panel hidden">
+      <div class="space-y-4 mb-8">
+        <details class="bg-surface-light rounded-xl border border-border p-5 group" open><summary class="flex items-center justify-between cursor-pointer font-semibold text-text-primary">Is this security headers checker free?<svg class="w-5 h-5 text-text-muted group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></summary><p class="mt-3 text-text-secondary text-sm">Yes, completely free with no signup required. You can check as many websites as you want.</p></details>
+        <details class="bg-surface-light rounded-xl border border-border p-5 group"><summary class="flex items-center justify-between cursor-pointer font-semibold text-text-primary">How does the checker work?<svg class="w-5 h-5 text-text-muted group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></summary><p class="mt-3 text-text-secondary text-sm">The checker sends up to 3 requests to the target site: an HTTPS GET to read response headers, an HTTP request to test redirect behavior, and a CORS probe. It analyzes results against 11 security tests based on the Mozilla Observatory algorithm v5.</p></details>
+        <details class="bg-surface-light rounded-xl border border-border p-5 group"><summary class="flex items-center justify-between cursor-pointer font-semibold text-text-primary">Will scanning cause any damage?<svg class="w-5 h-5 text-text-muted group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></summary><p class="mt-3 text-text-secondary text-sm">No. The checker sends up to 3 lightweight HTTP requests — identical to what a normal browser does when visiting a page. Completely non-intrusive.</p></details>
+        <details class="bg-surface-light rounded-xl border border-border p-5 group"><summary class="flex items-center justify-between cursor-pointer font-semibold text-text-primary">What is a good grade?<svg class="w-5 h-5 text-text-muted group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></summary><p class="mt-3 text-text-secondary text-sm">Grades range from A+ to F across 13 levels. An A+ requires a score of 100 or above. Anything below C (under 55) indicates significant gaps.</p></details>
+        <details class="bg-surface-light rounded-xl border border-border p-5 group"><summary class="flex items-center justify-between cursor-pointer font-semibold text-text-primary">How does scoring compare to Mozilla Observatory?<svg class="w-5 h-5 text-text-muted group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></summary><p class="mt-3 text-text-secondary text-sm">Our scoring uses the Observatory algorithm v5 with additional checks like SRI, CORS, and cookie security analysis. The 13-grade scale matches Observatory.</p></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="bg-brand-dark py-16">
+  <div class="max-w-3xl mx-auto px-5 text-center">
+    <h2 class="text-2xl lg:text-3xl font-bold text-white mb-4">Explore More Security Tools</h2>
+    <p class="text-gray-400 mb-8 max-w-xl mx-auto">Security headers are just one piece of the puzzle. Check your DNS security, SSL/TLS certificates, and discover subdomains.</p>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a href="https://appsecsanta.com/tools/dns-security-checker" class="inline-flex items-center gap-2 px-8 py-4 bg-brand-red hover:bg-brand-red-hover text-white font-semibold rounded-xl transition-colors no-underline">DNS Checker <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></a>
+      <a href="https://appsecsanta.com/tools/ssl-checker" class="inline-flex items-center gap-2 px-8 py-4 border border-white/20 hover:border-white/40 text-white font-semibold rounded-xl transition-colors no-underline">SSL Checker <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-white border-t border-border py-8">
+  <div class="max-w-6xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-text-muted">
+    <div>Powered by <a href="https://appsecsanta.com" class="text-brand-red hover:underline font-medium no-underline">AppSec Santa</a> — Free, open-source security tools</div>
+    <div class="flex items-center gap-4">
+      <a href="https://github.com/appsecsanta/security-tools" class="hover:text-text-primary no-underline">GitHub</a>
+      <a href="https://github.com/appsecsanta/security-tools/blob/main/LICENSE" class="hover:text-text-primary no-underline">MIT License</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/headers-checker.js" defer></script>
+</body>
+</html>
