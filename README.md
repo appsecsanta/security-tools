@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://appsecsanta.com/images/appsecsanta-logo.png" width="200" alt="AppSec Santa" />
+  <img src="https://appsecsanta.com/favicon.png" width="200" alt="AppSec Santa" />
 </p>
 
 <h1 align="center">AppSec Santa Security Tools</h1>
